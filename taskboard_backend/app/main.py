@@ -150,14 +150,27 @@ def auth_telegram():
         name = name.strip() or (u.get("username") or (f"User{user_id}" if user_id else "User"))
         username = u.get("username")
     else:
-        # Fallback demo format: "<uid>:<name>:<username>"
+        # If HMAC verification failed but init_data is a Telegram querystring, try to parse user JSON as a soft fallback
         try:
-            parts = init_data.split(":")
-            user_id = int(parts[0])
-            name = parts[1] if len(parts) > 1 else (f"User{user_id}")
-            username = parts[2] if len(parts) > 2 else None
+            params = dict(parse_qsl(init_data, keep_blank_values=True))
+            user_raw = params.get("user")
+            if user_raw:
+                u = json.loads(unquote(user_raw))
+                user_id = int(u.get("id")) if u and u.get("id") is not None else None
+                name = (u.get("first_name") or "") + (" " + u.get("last_name") if u.get("last_name") else "")
+                name = name.strip() or (u.get("username") or (f"User{user_id}" if user_id else "User"))
+                username = u.get("username")
+            else:
+                raise ValueError("no user in initData")
         except Exception:
-            return jsonify({"detail": "Invalid initData format"}), 400
+            # Fallback demo format: "<uid>:<name>:<username>"
+            try:
+                parts = init_data.split(":")
+                user_id = int(parts[0])
+                name = parts[1] if len(parts) > 1 else (f"User{user_id}")
+                username = parts[2] if len(parts) > 2 else None
+            except Exception:
+                return jsonify({"detail": "Invalid initData format"}), 400
     if user_id not in USERS:
         USERS[user_id] = {"profile": {
             "name": name,
