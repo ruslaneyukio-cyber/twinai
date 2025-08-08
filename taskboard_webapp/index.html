@@ -198,11 +198,20 @@
           };
         }, [token]);
 
-        const urlApi = new URLSearchParams(location.search).get('api');
+        const qs = new URLSearchParams(location.search);
+        const urlApi = qs.get('api');
+        const forceApi = qs.get('force_api');
         const DEFAULT_API = (window.__API_BASE__ || "http://127.0.0.1:8001").replace(/\/$/, "");
         // If running inside Telegram WebApp, always force DEFAULT_API to avoid stale ?api links
         const inTelegram = !!(window.Telegram && window.Telegram.WebApp);
-        let API = (inTelegram ? DEFAULT_API : ((urlApi && decodeURIComponent(urlApi)) || DEFAULT_API)).replace(/\/$/, "");
+        let API = DEFAULT_API;
+        if (inTelegram) {
+          // emergency override: ?force_api=<url>
+          if (forceApi) API = decodeURIComponent(forceApi);
+        } else {
+          API = ((urlApi && decodeURIComponent(urlApi)) || DEFAULT_API);
+        }
+        API = API.replace(/\/$/, "");
 
         const getInitData = () => {
           const tg = window.Telegram && window.Telegram.WebApp;

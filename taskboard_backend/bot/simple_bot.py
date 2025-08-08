@@ -36,7 +36,8 @@ def _build_webapp_url() -> str:
     v = int(time.time())
     base = FRONTEND_URL.rstrip("/")
     # Force /index.html to avoid root redirects/caching
-    webapp_url = f"{base}/index.html?api={urllib.parse.quote(API_BASE, safe='')}&v={v}"
+    # Use force_api to override API inside Telegram Mini App even when it forces default
+    webapp_url = f"{base}/index.html?force_api={urllib.parse.quote(API_BASE, safe='')}&v={v}"
     return webapp_url
 
 
