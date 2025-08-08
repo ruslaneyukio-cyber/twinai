@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: taskboard-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 2 -k gthread -b 0.0.0.0:$PORT app.main:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: SEND_NOTIFICATIONS
+        value: "1"
+    autoDeploy: true
+    healthCheckPath: /health
