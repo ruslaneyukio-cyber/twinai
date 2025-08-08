@@ -198,6 +198,13 @@
           };
         }, [token]);
 
+        // Ensure Telegram WebApp is initialized and expanded when inside Telegram
+        useEffect(() => {
+          const tg = window.Telegram && window.Telegram.WebApp;
+          try { tg && tg.ready && tg.ready(); } catch(_e) {}
+          try { tg && tg.expand && tg.expand(); } catch(_e) {}
+        }, []);
+
         const qs = new URLSearchParams(location.search);
         const urlApi = qs.get('api');
         const forceApi = qs.get('force_api');
@@ -212,6 +219,20 @@
           API = ((urlApi && decodeURIComponent(urlApi)) || DEFAULT_API);
         }
         API = API.replace(/\/$/, "");
+
+        // Auto-trigger auth inside Telegram once when initData is present
+        useEffect(() => {
+          const tg = window.Telegram && window.Telegram.WebApp;
+          if (!tg || !inTelegram || token) return;
+          try {
+            if (tg.initData && tg.initData.length > 0) {
+              if (!window.__authAttempted) {
+                window.__authAttempted = true;
+                auth();
+              }
+            }
+          } catch(_e) {}
+        }, [inTelegram, token]);
 
         const getInitData = () => {
           const tg = window.Telegram && window.Telegram.WebApp;
