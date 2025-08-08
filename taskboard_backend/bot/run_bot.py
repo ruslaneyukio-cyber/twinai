@@ -11,16 +11,17 @@ FRONTEND_URL = os.getenv(
     "FRONTEND_URL",
     "https://taskboard-tg-miniapp-ruslan.windsurf.build",
 )
-# Optional backend API override (e.g., Cloudflare Tunnel)
+# Optional backend API override. Default to stable Render backend.
 API_BASE = os.getenv(
     "API_BASE",
-    "https://taken-pennsylvania-enables-cancel.trycloudflare.com",
+    "https://twinai-0yz2.onrender.com",
 )
 
 
 def miniapp_keyboard() -> InlineKeyboardMarkup:
     # Provide Web App button with API param so the web app talks to the right backend
-    webapp_url = f"{FRONTEND_URL}?api={API_BASE}"
+    import time as _time
+    webapp_url = f"{FRONTEND_URL}?api={API_BASE}&v={int(_time.time())}"
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [

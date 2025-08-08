@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response, stream_with_context
 from flask_cors import CORS
 from typing import Dict, Optional
+from queue import Queue
+import threading
 from datetime import datetime
 import os
 import hmac
@@ -26,6 +28,63 @@ USERS: Dict[int, dict] = {}
 TASKS: Dict[int, dict] = {}
 BALANCES: Dict[int, dict] = {}
 TASK_COUNTER = 1
+
+# --- Simple in-process pub/sub for SSE ---
+SUBSCRIBERS: Dict[int, Queue] = {}
+SUBSCRIBERS_LOCK = threading.Lock()
+SUB_ID_SEQ = 1
+
+def _sse_format(event: str, data: dict) -> str:
+    import json as _json
+    return f"event: {event}\n" + f"data: {_json.dumps(data, ensure_ascii=False)}\n\n"
+
+def _publish(event: str, data: dict):
+    with SUBSCRIBERS_LOCK:
+        qs = list(SUBSCRIBERS.values())
+    payload = _sse_format(event, data)
+    for q in qs:
+        try:
+            q.put_nowait(payload)
+        except Exception:
+            pass
+
+@app.get("/events")
+def sse_events():
+    global SUB_ID_SEQ
+    q: Queue = Queue(maxsize=100)
+    with SUBSCRIBERS_LOCK:
+        sid = SUB_ID_SEQ
+        SUB_ID_SEQ += 1
+        SUBSCRIBERS[sid] = q
+
+    def gen():
+        try:
+            # initial hello
+            yield _sse_format("hello", {"ok": True})
+            # keepalive loop
+            import time as _time
+            last_ping = _time.time()
+            while True:
+                try:
+                    item = q.get(timeout=10)
+                    yield item
+                except Exception:
+                    # keepalive ping every ~20s
+                    now = _time.time()
+                    if now - last_ping > 20:
+                        last_ping = now
+                        yield _sse_format("ping", {"ts": int(now)})
+        finally:
+            with SUBSCRIBERS_LOCK:
+                SUBSCRIBERS.pop(sid, None)
+
+    headers = {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+    }
+    return Response(stream_with_context(gen()), headers=headers)
 
 
 def get_user_id_from_token(token: str) -> int:
@@ -104,6 +163,20 @@ def _send_telegram_message(chat_id: int, text: str) -> None:
     except Exception:
         # Silent fail to avoid breaking main flow
         pass
+
+
+def _augment_task_names(t: dict) -> dict:
+    """Return a copy of task with customer_name and performer_name added if available."""
+    out = dict(t)
+    cid = out.get("customer_id")
+    pid = out.get("performer_id")
+    if cid in USERS:
+        out["customer_name"] = USERS[cid]["profile"].get("name")
+        out["customer_username"] = USERS[cid]["profile"].get("username")
+    if pid and (pid in USERS):
+        out["performer_name"] = USERS[pid]["profile"].get("name")
+        out["performer_username"] = USERS[pid]["profile"].get("username")
+    return out
 
 
 @app.get("/health")
@@ -205,6 +278,7 @@ def list_tasks():
         items.sort(key=lambda x: x.get("price", 0), reverse=True)
     elif sort == "rating":
         items.sort(key=lambda x: x.get("customer_rating", 0), reverse=True)
+    items = [_augment_task_names(t) for t in items]
     return jsonify({"items": items})
 
 
@@ -212,8 +286,8 @@ def list_tasks():
 def get_task(task_id: int):
     t = TASKS.get(task_id)
     if not t:
-        return jsonify({"detail": "Task not found"}), 404
-    return jsonify(t)
+        return jsonify({"detail": "Task not found", "id": task_id}), 404
+    return jsonify(_augment_task_names(t))
 
 
 @app.post("/tasks")
@@ -251,13 +325,23 @@ def create_task():
         "created_at": datetime.utcnow().isoformat(),
     }
     TASKS[TASK_COUNTER] = task
+    # increment created counter safely
+    try:
+        USERS.setdefault(user_id, {"profile": {}})
+        prof = USERS[user_id].setdefault("profile", {})
+        prof["created_tasks"] = int(prof.get("created_tasks", 0)) + 1
+    except Exception:
+        pass
     TASK_COUNTER += 1
     USERS[user_id]["profile"]["created_tasks"] = USERS[user_id]["profile"].get("created_tasks", 0) + 1
     try:
         _send_telegram_message(user_id, f"✅ Задание создано: <b>{title}</b> на {price} монет")
     except Exception:
         pass
-    return jsonify(task)
+    at = _augment_task_names(task)
+    _publish("task", {"action": "created", "task": at})
+    _publish("balance", {"user_id": user_id, "balance": b["balance"]})
+    return jsonify(at)
 
 
 @app.post("/tasks/<int:task_id>/take")
@@ -272,6 +356,9 @@ def take_task(task_id: int):
     t = TASKS.get(task_id)
     if not t:
         return jsonify({"detail": "Task not found"}), 404
+    # Prevent customer from taking their own task
+    if t.get("customer_id") == uid:
+        return jsonify({"detail": "Cannot take own task"}), 403
     if t["status"] != "free":
         return jsonify({"detail": "Task not available"}), 400
     t["status"] = "taken"
@@ -280,7 +367,9 @@ def take_task(task_id: int):
         _send_telegram_message(t["customer_id"], f"🛠 Исполнитель взял задание #{task_id}")
     except Exception:
         pass
-    return jsonify(t)
+    at = _augment_task_names(t)
+    _publish("task", {"action": "updated", "task": at})
+    return jsonify(at)
 
 
 @app.post("/tasks/<int:task_id>/complete")
@@ -306,7 +395,9 @@ def complete_task(task_id: int):
         _send_telegram_message(t["customer_id"], f"📦 Работа по заданию #{task_id} отмечена как выполненная")
     except Exception:
         pass
-    return jsonify(t)
+    at = _augment_task_names(t)
+    _publish("task", {"action": "updated", "task": at})
+    return jsonify(at)
 
 
 @app.post("/tasks/<int:task_id>/confirm")
@@ -326,19 +417,30 @@ def confirm_task(task_id: int):
     if t["status"] != "completed":
         return jsonify({"detail": "Invalid status"}), 400
     t["status"] = "confirmed"
-    performer = t.get("performer_id")
-    if performer is None:
+    performer_id = t.get("performer_id")
+    if performer_id is None:
         return jsonify({"detail": "No performer"}), 400
-    pb = BALANCES.setdefault(performer, {"balance": 0, "history": []})
+    # transfer funds to performer
+    pb = BALANCES.setdefault(performer_id, {"balance": 0, "history": []})
     pb["balance"] += t["price"]
-    pb["history"].append({"type": "transfer", "amount": t["price"], "ts": datetime.utcnow().isoformat(), "task_id": task_id})
-    if performer in USERS:
-        USERS[performer]["profile"]["finished_tasks"] = USERS[performer]["profile"].get("finished_tasks", 0) + 1
+    # increment finished counter for performer
     try:
-        _send_telegram_message(performer, f"🎉 Оплата за задание #{task_id} зачислена: {t['price']} монет")
+        USERS.setdefault(performer_id, {"profile": {}})
+        pprof = USERS[performer_id].setdefault("profile", {})
+        pprof["finished_tasks"] = int(pprof.get("finished_tasks", 0)) + 1
     except Exception:
         pass
-    return jsonify(t)
+    pb["history"].append({"type": "transfer", "amount": t["price"], "ts": datetime.utcnow().isoformat(), "task_id": task_id})
+    if performer_id in USERS:
+        USERS[performer_id]["profile"]["finished_tasks"] = USERS[performer_id]["profile"].get("finished_tasks", 0) + 1
+    try:
+        _send_telegram_message(performer_id, f"🎉 Оплата за задание #{task_id} зачислена: {t['price']} монет")
+    except Exception:
+        pass
+    at = _augment_task_names(t)
+    _publish("task", {"action": "updated", "task": at})
+    _publish("balance", {"user_id": performer_id, "balance": pb["balance"]})
+    return jsonify(at)
 
 
 @app.post("/tasks/<int:task_id>/reject")
@@ -367,7 +469,10 @@ def reject_task(task_id: int):
             _send_telegram_message(performer, f"⚠️ Задание #{task_id} отклонено заказчиком, средства возвращены заказчику")
     except Exception:
         pass
-    return jsonify(t)
+    at = _augment_task_names(t)
+    _publish("task", {"action": "updated", "task": at})
+    _publish("balance", {"user_id": uid, "balance": cb["balance"]})
+    return jsonify(at)
 
 
 @app.get("/balance")

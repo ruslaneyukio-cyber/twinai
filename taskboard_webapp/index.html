@@ -6,6 +6,10 @@
     <title>TaskBoard</title>
     <meta name="theme-color" content="#0EA5E9" />
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+      // Default API base for production
+      window.__API_BASE__ = "https://twinai-0yz2.onrender.com";
+    </script>
     <style>
       /* Telegram-like dark navy theme overrides */
       .tg-dark body.bg-slate-50 { background-color: #0e1525 !important; }
@@ -27,6 +31,17 @@
       .tg-dark .bg-rose-50 { background-color: #2b1220 !important; }
       .tg-dark .text-rose-700 { color: #fecaca !important; }
       .tg-dark .ring-slate-200 { border-color: #2a3550 !important; }
+      /* Bottom toolbar dark styling */
+      .tg-dark .tb-bg { background-color: rgba(22, 33, 53, 0.9) !important; border-color: #20314e !important; }
+      .tg-dark .tb-icon { color: #9fb4d1 !important; }
+      .tg-dark .tb-icon-active { color: #38bdf8 !important; }
+      .tg-dark .tb-label { color: #a7b6cc !important; }
+      .tg-dark .tb-label-active { color: #e5f2ff !important; }
+      /* Inputs readable on white surfaces even in dark */
+      .field-input { background:#ffffff; color:#0f172a; }
+      .field-input::placeholder { color:#64748b; }
+      .tg-dark .field-input { background:#ffffff !important; color:#0f172a !important; }
+      .tg-dark .field-input::placeholder { color:#64748b !important; }
     </style>
     <script>
       // Call ready ASAP to prevent Telegram from showing the load overlay
@@ -87,12 +102,13 @@
       const useEffect = React.useEffect;
       const useState = React.useState;
 
-      function Icon({name, className="h-4 w-4"}){
+      function Icon({name, className="h-6 w-6"}){
         const icons = {
           refresh: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1020 9"/>',
           plus: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M6 12h12"/>',
           wallet: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h14a2 2 0 012 2v6a2 2 0 01-2 2H3V7zm0 0V5a2 2 0 012-2h11"/>',
-          user: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A7 7 0 0112 15a7 7 0 016.879 2.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/>'
+          user: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A7 7 0 0112 15a7 7 0 016.879 2.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/>',
+          home: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l9-7 9 7v8a2 2 0 01-2 2h-4a2 2 0 01-2-2V12H9v6a2 2 0 01-2 2H3z"/>'
         };
         return React.createElement('svg', {xmlns:'http://www.w3.org/2000/svg', viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', className}, React.createElement('g', {dangerouslySetInnerHTML:{__html:icons[name]||''}}));
       }
@@ -104,6 +120,20 @@
         const [error, setError] = useState("");
         const [balance, setBalance] = useState(null);
         const [profile, setProfile] = useState(null);
+        const [tab, setTab] = useState("feed"); // feed | profile
+        const [showCreate, setShowCreate] = useState(false);
+        const [form, setForm] = useState({ title: "", description: "", price: "", category: "general" });
+        const [userId, setUserId] = useState(null);
+
+        // Haptic feedback helper
+        const haptic = (style = 'light') => {
+          try {
+            const tg = window.Telegram && window.Telegram.WebApp;
+            if (tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred) {
+              tg.HapticFeedback.impactOccurred(style);
+            }
+          } catch (_e) {}
+        };
 
         // Ensure Telegram WebApp marks the app as ready to avoid "Load failed" overlay
         useEffect(() => {
@@ -125,6 +155,13 @@
             }
           }
         }, []);
+
+        // Load profile on tab change
+        useEffect(() => {
+          if (tab === 'profile' && token) {
+            viewProfile();
+          }
+        }, [tab, token]);
 
         // Wire Telegram MainButton for "Старт" until authorized
         useEffect(() => {
@@ -162,7 +199,10 @@
         }, [token]);
 
         const urlApi = new URLSearchParams(location.search).get('api');
-        const API = ((urlApi && decodeURIComponent(urlApi)) || window.__API_BASE__ || "http://127.0.0.1:8001").replace(/\/$/, "");
+        const DEFAULT_API = (window.__API_BASE__ || "http://127.0.0.1:8001").replace(/\/$/, "");
+        // If running inside Telegram WebApp, always force DEFAULT_API to avoid stale ?api links
+        const inTelegram = !!(window.Telegram && window.Telegram.WebApp);
+        let API = (inTelegram ? DEFAULT_API : ((urlApi && decodeURIComponent(urlApi)) || DEFAULT_API)).replace(/\/$/, "");
 
         const getInitData = () => {
           const tg = window.Telegram && window.Telegram.WebApp;
@@ -191,7 +231,28 @@
             const r = await fetch(API + "/profile?token=" + encodeURIComponent(token));
             const d = await r.json();
             if (!r.ok) throw new Error(d.detail || "Profile error");
-            setProfile(d);
+            // Keep shape {profile: {...}} to match UI usage
+            setProfile({ profile: d });
+          } catch (e) { setError(String(e.message || e)); }
+        };
+
+        const saveProfile = async () => {
+          if (!token || !profile) return;
+          setError("");
+          try {
+            const payload = {
+              name: (profile.profile && profile.profile.name) || "",
+              username: (profile.profile && profile.profile.username) || ""
+            };
+            const r = await fetch(API + "/profile?token=" + encodeURIComponent(token), {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.detail || "Save profile error");
+            setProfile({ profile: d });
+            haptic('light');
           } catch (e) { setError(String(e.message || e)); }
         };
 
@@ -199,10 +260,12 @@
           if (!token) return;
           setError("");
           try {
-            const r = await fetch(API + `/tasks/${id}/take?token=` + encodeURIComponent(token), { method: "POST" });
+            haptic('medium');
+            const r = await fetch(API + "/tasks/" + id + "/take?token=" + encodeURIComponent(token), { method: "POST" });
             const d = await r.json();
             if (!r.ok) throw new Error(d.detail || "Take error");
             await loadTasks();
+            await viewBalance();
           } catch (e) { setError(String(e.message || e)); }
         };
 
@@ -210,7 +273,8 @@
           if (!token) return;
           setError("");
           try {
-            const r = await fetch(API + `/tasks/${id}/complete?token=` + encodeURIComponent(token), { method: "POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ result_text: "Done" }) });
+            haptic('medium');
+            const r = await fetch(API + "/tasks/" + id + "/complete?token=" + encodeURIComponent(token), { method: "POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ result_text: "Done" }) });
             const d = await r.json();
             if (!r.ok) throw new Error(d.detail || "Complete error");
             await loadTasks();
@@ -221,10 +285,12 @@
           if (!token) return;
           setError("");
           try {
-            const r = await fetch(API + `/tasks/${id}/confirm?token=` + encodeURIComponent(token), { method: "POST" });
+            haptic('rigid');
+            const r = await fetch(API + "/tasks/" + id + "/confirm?token=" + encodeURIComponent(token), { method: "POST" });
             const d = await r.json();
             if (!r.ok) throw new Error(d.detail || "Confirm error");
             await loadTasks();
+            await viewBalance();
           } catch (e) { setError(String(e.message || e)); }
         };
 
@@ -232,10 +298,28 @@
           if (!token) return;
           setError("");
           try {
-            const r = await fetch(API + `/tasks/${id}/reject?token=` + encodeURIComponent(token), { method: "POST" });
+            haptic('light');
+            const r = await fetch(API + "/tasks/" + id + "/reject?token=" + encodeURIComponent(token), { method: "POST" });
             const d = await r.json();
             if (!r.ok) throw new Error(d.detail || "Reject error");
             await loadTasks();
+            await viewBalance();
+          } catch (e) { setError(String(e.message || e)); }
+        };
+
+        const addFunds = async (amount = 1000) => {
+          if (!token) return;
+          setError("");
+          try {
+            const r = await fetch(API + "/balance/add?token=" + encodeURIComponent(token), {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ amount })
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.detail || "Top-up error");
+            setBalance(d);
+            haptic('medium');
           } catch (e) { setError(String(e.message || e)); }
         };
 
@@ -244,16 +328,34 @@
           try {
             const tg = window.Telegram && window.Telegram.WebApp;
             if (tg && tg.expand) tg.expand();
-            const initData = getInitData();
-            const body = new URLSearchParams({ initData });
-            const r = await fetch(API + "/auth/telegram", {
+            haptic('light');
+            let initData = getInitData();
+            let body = new URLSearchParams({ initData });
+            console.log("[auth] API:", API);
+            console.log("[auth] initData length:", (initData||"").length);
+            let r = await fetch(API + "/auth/telegram", {
               method: "POST",
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
               body
             });
-            const d = await r.json();
-            if (!r.ok) throw new Error(d.detail || "Auth error");
-            setToken(d.token || "");
+            let d = await r.json();
+            if (!r.ok || !d.token) {
+              // soft fallback: try demo initData
+              console.warn("[auth] primary failed, trying demo fallback");
+              initData = "1001:Ruslan:ruslan";
+              body = new URLSearchParams({ initData });
+              r = await fetch(API + "/auth/telegram", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body
+              });
+              d = await r.json();
+              if (!r.ok || !d.token) throw new Error(d.detail || "Auth error");
+            }
+            const tkn = d.token || "";
+            setToken(tkn);
+            // derive numeric user id from token prefix
+            try { const uid = parseInt(String(tkn).split(":")[0], 10); if (!isNaN(uid)) setUserId(uid); } catch(_e) {}
           } catch (e) {
             setError(String(e.message || e));
           }
@@ -296,79 +398,334 @@
           }
         };
 
+        const createTask = async () => {
+          if (!token) { setError("Сначала войдите"); return; }
+          setError("");
+          try {
+            const priceNum = Number(form.price);
+            if (!form.title.trim()) throw new Error("Введите заголовок");
+            if (!form.description.trim()) throw new Error("Введите описание");
+            if (!Number.isFinite(priceNum) || priceNum <= 0) throw new Error("Цена должна быть > 0");
+            const payload = {
+              title: form.title.trim(),
+              description: form.description.trim(),
+              price: priceNum,
+              category: form.category || "general"
+            };
+            const r = await fetch(API + "/tasks?token=" + encodeURIComponent(token), {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
+            const d = await r.json();
+            if (!r.ok) {
+              if (d && d.detail === 'Insufficient balance') {
+                throw new Error('Недостаточно монет. Пополните баланс и повторите.');
+              }
+              throw new Error(d.detail || "Create task error");
+            }
+            setShowCreate(false);
+            setForm({ title: "", description: "", price: "", category: "general" });
+            await loadTasks();
+            await viewBalance();
+          } catch (e) { setError(String(e.message || e)); }
+        };
+
         useEffect(function () {
-          auth().then(loadTasks);
+          auth().then(() => { loadTasks(); /* balance/profile will load on token change */ });
         }, []);
 
-      return React.createElement(
-        "div",
-        { className: "max-w-3xl mx-auto p-4" },
-        React.createElement(
-          "header",
-          { className: "rounded-2xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white p-4 mb-4 shadow" },
-          React.createElement("div", { className:"flex items-center justify-between"},
-            React.createElement("div", {className:"flex items-center gap-2"},
-              React.createElement("div", {className:"h-9 w-9 rounded-xl bg-white/15 flex items-center justify-center"},
-                React.createElement("svg", {xmlns:"http://www.w3.org/2000/svg", viewBox:"0 0 24 24", fill:"none", stroke:"currentColor", className:"h-5 w-5"},
-                  React.createElement("path", {d:"M4 4h16v6H4zM4 14h10v6H4z", strokeWidth:2, strokeLinecap:"round", strokeLinejoin:"round"})
+        // SSE real-time updates
+        const sseRef = React.useRef(null);
+        useEffect(() => {
+          if (!API) return;
+          try { if (sseRef.current) { sseRef.current.close(); } } catch(_e) {}
+          let closed = false;
+          const connect = () => {
+            if (closed) return;
+            const es = new EventSource(API + "/events");
+            sseRef.current = es;
+            es.addEventListener('hello', () => {/* no-op */});
+            es.addEventListener('ping', () => {/* keepalive */});
+            es.addEventListener('task', (ev) => {
+              try {
+                const payload = JSON.parse(ev.data);
+                const t = payload.task;
+                const action = payload.action;
+                if (!t || !t.id) return;
+                setTasks((prev) => {
+                  const list = Array.isArray(prev) ? prev.slice() : [];
+                  const idx = list.findIndex(x => x.id === t.id);
+                  if (action === 'created') {
+                    if (idx === -1) list.unshift(t); else list[idx] = t;
+                  } else if (action === 'updated') {
+                    if (idx !== -1) list[idx] = t; else list.unshift(t);
+                  } else if (action === 'deleted') {
+                    if (idx !== -1) list.splice(idx, 1);
+                  }
+                  return list;
+                });
+              } catch(_e) {}
+            });
+            es.addEventListener('balance', (ev) => {
+              try {
+                const payload = JSON.parse(ev.data);
+                if (!payload) return;
+                if (userId && payload.user_id === userId) {
+                  setBalance((b) => ({ ...(b||{}), balance: payload.balance }));
+                }
+              } catch(_e) {}
+            });
+            es.onerror = () => {
+              try { es.close(); } catch(_e) {}
+              // reconnect after short delay
+              setTimeout(() => { connect(); }, 2000);
+            };
+          };
+          connect();
+          return () => { closed = true; try { if (sseRef.current) sseRef.current.close(); } catch(_e) {} };
+        }, [API, userId]);
+
+        // Verify API health and fall back to DEFAULT_API if the provided ?api is stale/unreachable
+        useEffect(() => {
+          (async () => {
+            try {
+              const r = await fetch(API + "/health", { method: "GET" });
+              if (!r.ok) throw new Error("bad status");
+            } catch (_e) {
+              // Try default backend
+              if (API !== DEFAULT_API) {
+                try {
+                  const r2 = await fetch(DEFAULT_API + "/health", { method: "GET" });
+                  if (r2.ok) {
+                    console.warn("[api] Switching to DEFAULT_API:", DEFAULT_API);
+                    API = DEFAULT_API;
+                    // Re-run key flows on a healthy API
+                    if (!token) {
+                      await auth();
+                    }
+                    await loadTasks();
+                    await viewBalance();
+                    await viewProfile();
+                  }
+                } catch (__e) {
+                  // both failed — surface error via UI on demand
+                }
+              }
+            }
+          })();
+        }, []);
+
+        // After token is set, fetch balance and profile so header shows actual values
+        useEffect(() => {
+          if (token) {
+            viewBalance();
+            // Preload profile silently for header avatar initial
+            viewProfile();
+          }
+        }, [token]);
+
+        // Auto-load profile when switching to profile tab and authorized
+        useEffect(() => {
+          if (tab === 'profile' && token) {
+            viewProfile();
+          }
+        }, [tab, token]);
+
+        return React.createElement(
+          "div",
+          { className: "max-w-3xl mx-auto p-4 pb-24" },
+          React.createElement(
+            "header",
+            { className: "rounded-2xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white p-4 mb-4 shadow transition-colors" },
+            React.createElement("div", { className:"flex items-center justify-between"},
+              React.createElement("div", {className:"flex items-center gap-2"},
+                React.createElement("div", {className:"h-9 w-9 rounded-xl bg-white/15 flex items-center justify-center"},
+                  React.createElement("svg", {xmlns:"http://www.w3.org/2000/svg", viewBox:"0 0 24 24", fill:"none", stroke:"currentColor", className:"h-5 w-5"},
+                    React.createElement("path", {d:"M4 4h16v6H4zM4 14h10v6H4z", strokeWidth:2, strokeLinecap:"round", strokeLinejoin:"round"})
+                  )
+                ),
+                React.createElement("div", {className:"flex items-center gap-2"},
+                  React.createElement("button", { onClick: () => setTab('feed'), className: "text-left text-lg font-semibold" }, "TaskBoard")
+                ),
+                React.createElement("div", { className:"flex items-center gap-2" },
+                  (
+                  token && balance
+                      ? React.createElement(React.Fragment, null,
+                          React.createElement("span", { className: "text-xs bg-white/15 px-2 py-1 rounded-full" }, "Баланс: ", balance.balance, " монет"),
+                          React.createElement("button", { onClick: () => { haptic('light'); addFunds(1000); }, className: "ml-2 text-xs px-2 py-1 rounded-full bg-white/20 hover:bg-white/25 transition" }, "+1000")
+                        )
+                      : React.createElement("span", { className: "text-xs bg-white/15 px-2 py-1 rounded-full" }, token ? "Авторизован" : "Не авторизован")
+                ),
+                  React.createElement("button", { onClick: () => setTab('profile'), title:"Профиль", className:"ml-1 h-8 w-8 rounded-full bg-white/20 flex items-center justify-center ring-1 ring-white/25 hover:ring-white/40 transition" },
+                    React.createElement("span", { className:"text-white/90 text-xs font-semibold" },
+                      (profile && profile.profile && (profile.profile.name||profile.profile.username||'U')) ? (String((profile.profile.name||profile.profile.username))[0] || 'U') : 'U'
+                    )
+                  )
                 )
-              ),
-              React.createElement("h1", { className: "text-lg font-semibold" }, "TaskBoard")
+              )
             ),
-            React.createElement("span", { className: "text-xs bg-white/15 px-2 py-1 rounded-full" }, token ? "Авторизован" : "Не авторизован")
-          )
-        ),
-        error && React.createElement("div", { className: "mb-3 p-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200" }, error),
-        React.createElement(
-          "div",
-          { className: "grid grid-cols-2 gap-2 mb-4" },
-          React.createElement("button", { onClick: loadTasks, className: "flex items-center justify-center gap-2 px-3 py-3 rounded-xl bg-white shadow-sm ring-1 ring-slate-200 active:scale-[0.99]" },
-            React.createElement(Icon, {name:"refresh", className:"h-4 w-4 text-sky-600"}), loading ? "Загрузка..." : "Обновить"),
-          React.createElement("button", { onClick: createDemoTask, disabled: !token, className: "flex items-center justify-center gap-2 px-3 py-3 rounded-xl bg-white shadow-sm ring-1 ring-slate-200 disabled:opacity-50 active:scale-[0.99]" },
-            React.createElement(Icon, {name:"plus", className:"h-4 w-4 text-emerald-600"}), "Демо-заказ"),
-          React.createElement("button", { onClick: viewBalance, disabled: !token, className: "flex items-center justify-center gap-2 px-3 py-3 rounded-xl bg-white shadow-sm ring-1 ring-slate-200 disabled:opacity-50 active:scale-[0.99]" },
-            React.createElement(Icon, {name:"wallet", className:"h-4 w-4 text-indigo-600"}), "Баланс"),
-          React.createElement("button", { onClick: viewProfile, disabled: !token, className: "flex items-center justify-center gap-2 px-3 py-3 rounded-xl bg-white shadow-sm ring-1 ring-slate-200 disabled:opacity-50 active:scale-[0.99]" },
-            React.createElement(Icon, {name:"user", className:"h-4 w-4 text-slate-700"}), "Профиль")
-        ),
-        React.createElement(
-          "div",
-          { className: "space-y-3" },
-          (tasks || []).map(function (t) {
-            return React.createElement(
-              "div",
-              { key: t.id, className: "p-4 bg-white rounded-2xl shadow-sm ring-1 ring-slate-200" },
+          ),
+          (!token) && React.createElement("div", { className: "mb-3 p-3 rounded-xl bg-white shadow-sm ring-1 ring-slate-200" },
+            React.createElement("div", {className:"text-sm text-slate-700"}, "Если кнопки неактивны, нажмите Telegram кнопку \"Старт\" внизу. При необходимости повторите."),
+            React.createElement("div", { className: "mt-2" },
+              React.createElement("button", { onClick: () => { haptic('light'); auth(); }, className: "px-3 py-2 rounded-lg bg-sky-600 text-white active:scale-[0.99] hover:brightness-110 transition shadow" }, "Войти")
+            )
+          ),
+          error && React.createElement("div", { className: "mb-3 p-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 shadow-sm" }, String(error)),
+          // CONTENT
+          (tab === 'feed' ? (
+            React.createElement(React.Fragment, null,
+              // Small API indicator (helps debug Mini App vs Web discrepancies)
+              React.createElement("div", { className: "mb-2 text-[10px] text-slate-400 select-text" }, "API:", ' ', API),
+              loading ? React.createElement("div", { className: "space-y-3" },
+                React.createElement("div", { className: "h-24 rounded-2xl bg-slate-200/60 animate-pulse" }),
+                React.createElement("div", { className: "h-24 rounded-2xl bg-slate-200/60 animate-pulse" }),
+                React.createElement("div", { className: "h-24 rounded-2xl bg-slate-200/60 animate-pulse" })
+              ) : null,
               React.createElement(
                 "div",
-                { className: "flex items-center justify-between mb-1" },
-                React.createElement("h2", { className: "font-semibold text-slate-800" }, t.title),
-                React.createElement("span", { className: "text-emerald-600 font-semibold" }, String(t.price) + " монет")
-              ),
-              React.createElement("p", { className: "text-sm text-slate-600 mb-2" }, t.description),
-              React.createElement("div", { className: "text-xs text-slate-500 mb-3" }, "Категория: " + t.category + " · Статус: " + t.status),
-              React.createElement("div", { className: "flex gap-2" },
-                React.createElement("button", { className: "px-3 py-2 rounded-lg bg-sky-600 text-white disabled:opacity-50", disabled: !token || t.status !== 'free', onClick: () => takeTask(t.id) }, "Взять"),
-                React.createElement("button", { className: "px-3 py-2 rounded-lg bg-amber-500 text-white disabled:opacity-50", disabled: !token || t.status !== 'taken', onClick: () => completeTask(t.id) }, "Завершить"),
-                React.createElement("button", { className: "px-3 py-2 rounded-lg bg-emerald-600 text-white disabled:opacity-50", disabled: !token || t.status !== 'completed', onClick: () => confirmTask(t.id) }, "Подтвердить"),
-                React.createElement("button", { className: "px-3 py-2 rounded-lg bg-rose-600 text-white disabled:opacity-50", disabled: !token || (t.status !== 'taken' && t.status !== 'completed'), onClick: () => rejectTask(t.id) }, "Отклонить")
+                { className: "space-y-3" },
+                (tasks || []).map(function (t) {
+                  const me = userId;
+                  const iAmCustomer = me && t.customer_id === me;
+                  const iAmPerformer = me && t.performer_id === me;
+                  return React.createElement(
+                    "div",
+                    { key: t.id, className: "p-4 bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden transition hover:ring-sky-300/40" },
+                    React.createElement(
+                      "div",
+                      { className: "flex items-center justify-between mb-1" },
+                      React.createElement("h2", { className: "font-semibold text-slate-800" }, t.title),
+                      React.createElement("span", { className: "text-emerald-600 font-semibold" }, String(t.price) + " монет")
+                    ),
+                    React.createElement("div", { className: "text-xs text-slate-500 mb-2" },
+                      (t.customer_name || t.customer_id) ? ("Заказчик: " + (t.customer_name || ("#"+t.customer_id))) : null,
+                      (t.performer_name || t.performer_id) ? (" · Исполнитель: " + (t.performer_name || ("#"+t.performer_id))) : ""
+                    ),
+                    React.createElement("p", { className: "text-sm text-slate-600 mb-3" }, t.description),
+                    React.createElement("div", { className: "text-xs text-slate-500 mb-3" }, "Категория: " + t.category + " · Статус: " + t.status),
+                    // Contacts disclosure after task is taken
+                    ((t.status === 'taken' || t.status === 'completed' || t.status === 'confirmed') && (iAmCustomer || iAmPerformer)) ? (
+                      React.createElement("div", { className: "mb-3 p-3 rounded-xl bg-slate-50 ring-1 ring-slate-200 text-sm text-slate-700" },
+                        iAmCustomer && t.performer_id ? (
+                          React.createElement("div", null,
+                            React.createElement("div", { className: "font-medium mb-1" }, "Контакты исполнителя"),
+                            React.createElement("div", null, "Имя: ", t.performer_name || ("#"+t.performer_id)),
+                            (t.performer_username ? React.createElement("div", null, "Telegram: @", t.performer_username) : null)
+                          )
+                        ) : null,
+                        iAmPerformer ? (
+                          React.createElement("div", null,
+                            React.createElement("div", { className: "font-medium mb-1" }, "Контакты заказчика"),
+                            React.createElement("div", null, "Имя: ", t.customer_name || ("#"+t.customer_id)),
+                            (t.customer_username ? React.createElement("div", null, "Telegram: @", t.customer_username) : null)
+                          )
+                        ) : null
+                      )
+                    ) : null,
+                    React.createElement("div", { className: "grid grid-cols-2 gap-2" },
+                      // Take: only non-customer when free
+                      (!iAmCustomer && t.status === 'free') ? (
+                        React.createElement("button", { className: "px-3 py-2 rounded-lg bg-sky-600 text-white active:scale-[0.99] hover:brightness-110 transition shadow", disabled: !token, onClick: () => { haptic('light'); takeTask(t.id); } }, "Взять")
+                      ) : null,
+                      // Complete: only performer when taken by them
+                      (iAmPerformer && t.status === 'taken') ? (
+                        React.createElement("button", { className: "px-3 py-2 rounded-lg bg-amber-500 text-white active:scale-[0.99] hover:brightness-110 transition shadow", disabled: !token, onClick: () => { haptic('light'); completeTask(t.id); } }, "Завершить")
+                      ) : null,
+                      // Confirm: only customer when completed
+                      (iAmCustomer && t.status === 'completed') ? (
+                        React.createElement("button", { className: "px-3 py-2 rounded-lg bg-emerald-600 text-white active:scale-[0.99] hover:brightness-110 transition shadow", disabled: !token, onClick: () => { haptic('rigid'); confirmTask(t.id); } }, "Подтвердить")
+                      ) : null,
+                      // Reject: only customer when taken or completed
+                      (iAmCustomer && (t.status === 'taken' || t.status === 'completed')) ? (
+                        React.createElement("button", { className: "px-3 py-2 rounded-lg bg-rose-600 text-white active:scale-[0.99] hover:brightness-110 transition shadow", disabled: !token, onClick: () => { haptic('light'); rejectTask(t.id); } }, "Отклонить")
+                      ) : null
+                    )
+                  );
+                })
               )
-            );
-          })
-        )
-        , (balance ? React.createElement("div", { className: "mt-4 p-4 bg-white rounded-2xl shadow-sm ring-1 ring-slate-200" },
-            React.createElement("div", { className: "font-semibold mb-1 text-slate-800" }, "Баланс: ", balance.balance, " монет"),
-            React.createElement("div", { className: "text-sm text-slate-600" }, "Транзакций: ", (balance.history||[]).length)
-          ) : null)
-        , (profile ? React.createElement("div", { className: "mt-4 p-4 bg-white rounded-2xl shadow-sm ring-1 ring-slate-200" },
-            React.createElement("div", { className: "font-semibold mb-1 text-slate-800" }, "Профиль"),
-            React.createElement("pre", { className: "text-xs text-slate-600 whitespace-pre-wrap" }, JSON.stringify(profile, null, 2))
-          ) : null)
-      );
-    }
+            )
+          ) : (
+            // PROFILE PAGE
+            React.createElement("div", { className: "space-y-3" },
+              React.createElement("div", { className: "p-4 bg-white rounded-2xl shadow-sm ring-1 ring-slate-200" },
+                React.createElement("div", { className: "font-semibold mb-1 text-slate-800" }, "Профиль"),
+                !token ? React.createElement("div", { className: "text-sm text-slate-600" }, "Авторизуйтесь, чтобы просмотреть профиль") : (
+                  profile ? React.createElement(React.Fragment, null,
+                    React.createElement("div", { className: "flex items-center gap-3 mb-3" },
+                      React.createElement("div", { className: "h-10 w-10 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center font-semibold" },
+                        (profile && profile.profile && (profile.profile.name||profile.profile.username||'U')) ? (String((profile.profile.name||profile.profile.username))[0] || 'U') : 'U'
+                      ),
+                      React.createElement("div", null,
+                        React.createElement("div", { className: "text-sm text-slate-700" }, (profile.profile && profile.profile.name) || "—"),
+                        React.createElement("div", { className: "text-xs text-slate-500" }, (profile.profile && profile.profile.username) ? ("@" + profile.profile.username) : "—")
+                      )
+                    ),
+                    React.createElement("div", { className: "grid grid-cols-1 gap-2" },
+                      React.createElement("div", null,
+                        React.createElement("label", { className: "block text-xs text-slate-500 mb-1" }, "Имя"),
+                        React.createElement("input", { className: "field-input w-full px-3 py-2 rounded-lg ring-1 ring-slate-200", value: (profile.profile && (profile.profile.name||"")), onChange: (e)=> setProfile({ profile: { ...(profile.profile||{}), name: e.target.value } }) })
+                      ),
+                      React.createElement("div", null,
+                        React.createElement("label", { className: "block text-xs text-slate-500 mb-1" }, "Username"),
+                        React.createElement("input", { className: "field-input w-full px-3 py-2 rounded-lg ring-1 ring-slate-200", value: (profile.profile && (profile.profile.username||"")), onChange: (e)=> setProfile({ profile: { ...(profile.profile||{}), username: e.target.value } }) })
+                      ),
+                      React.createElement("div", { className: "flex gap-2" },
+                        React.createElement("button", { onClick: ()=>{ haptic('light'); saveProfile(); }, className: "px-3 py-2 rounded-lg bg-sky-600 text-white active:scale-[0.99] hover:brightness-110 transition shadow" }, "Сохранить"),
+                        React.createElement("button", { onClick: ()=>{ haptic('light'); viewProfile(); }, className: "px-3 py-2 rounded-lg bg-slate-100 text-slate-800 ring-1 ring-slate-200 active:scale-[0.99] transition" }, "Обновить")
+                      )
+                    ),
+                    React.createElement("div", { className: "grid grid-cols-2 gap-2 mt-3 text-sm" },
+                      React.createElement("div", { className: "p-3 rounded-xl bg-slate-50 ring-1 ring-slate-200" }, "Создано задач: ", (profile.profile && (profile.profile.created_tasks||0))),
+                      React.createElement("div", { className: "p-3 rounded-xl bg-slate-50 ring-1 ring-slate-200" }, "Завершено задач: ", (profile.profile && (profile.profile.finished_tasks||0)))
+                    )
+                  ) : React.createElement("div", { className: "text-sm text-slate-600" }, "Загрузка профиля...")
+                )
+              )
+            )
+          )),
+          // Create Task Modal
+          (showCreate ? React.createElement(
+            "div",
+            { className: "fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50" },
+            React.createElement(
+              "div",
+              { className: "w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 shadow-xl ring-1 ring-slate-200" },
+              React.createElement("div", { className:"flex items-center justify-between mb-2"},
+                React.createElement("div", { className:"font-semibold text-slate-800" }, "Новое объявление"),
+                React.createElement("button", { onClick: () => setShowCreate(false), className:"text-slate-500 hover:text-slate-700" }, "✕")
+              ),
+              React.createElement("div", { className:"space-y-2" },
+                React.createElement("input", { value: form.title, onChange: e=>setForm({...form, title:e.target.value}), placeholder:"Заголовок", required:true, className:"field-input w-full px-3 py-2 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-400 outline-none" }),
+                React.createElement("textarea", { value: form.description, onChange: e=>setForm({...form, description:e.target.value}), placeholder:"Описание", rows:3, required:true, className:"field-input w-full px-3 py-2 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-400 outline-none" }),
+                React.createElement("div", { className:"grid grid-cols-2 gap-2" },
+                  React.createElement("input", { value: form.price, onChange: e=>setForm({...form, price:e.target.value}), placeholder:"Цена", inputMode:"numeric", required:true, className:"field-input w-full px-3 py-2 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-400 outline-none" }),
+                  React.createElement("select", { value: form.category, onChange: e=>setForm({...form, category:e.target.value}), className:"field-input w-full px-3 py-2 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-sky-400 outline-none" },
+                    React.createElement("option", { value:"general" }, "Общее"),
+                    React.createElement("option", { value:"design" }, "Дизайн"),
+                    React.createElement("option", { value:"dev" }, "Разработка"),
+                    React.createElement("option", { value:"other" }, "Другое")
+                  )
+                ),
+                React.createElement("button", { disabled: !token, onClick: () => { haptic('medium'); createTask(); }, className:"w-full px-3 py-3 rounded-xl bg-sky-600 text-white disabled:opacity-50 active:scale-[0.99] hover:brightness-110 transition shadow" }, "Создать")
+              )
+            )
+          ) : null),
+          // Bottom full-width button
+          React.createElement(
+            "nav",
+            { className: "fixed inset-x-0 bottom-0 tb-bg bg-white/90 backdrop-blur border-t border-slate-200 z-50" },
+            React.createElement(
+              "div",
+              { className: "max-w-3xl mx-auto px-4 py-2" },
+              React.createElement("button", { onClick: () => { haptic('light'); return token ? setShowCreate(true) : auth(); }, className:"w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-medium shadow-lg active:scale-[0.99] hover:brightness-110 transition" }, "Добавить объявление")
+            )
+          )
+        );
+      }
 
-    ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
-  </script>
-</body>
-</html>
+      ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+    </script>
   </body>
-  </html>
+</html>

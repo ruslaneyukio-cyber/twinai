@@ -1,0 +1,221 @@
+[bot] starting with FRONTEND_URL=https://taskboard-tg-miniapp-ruslan.windsurf.build API_BASE=https://twinai-0yz2.onrender.com
+[bot] polling getUpdates...
+[bot] update: {"update_id": 995570502, "message": {"message_id": 400, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754623774, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570503, "message": {"message_id": 401, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631352, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570504, "message": {"message_id": 402, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631446, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570505, "message": {"message_id": 403, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631447, "text": "dsf"}}
+[bot] update: {"update_id": 995570506, "message": {"message_id": 404, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631456, "text": "f"}}
+[bot] update: {"update_id": 995570507, "message": {"message_id": 405, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631636, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570508, "message": {"message_id": 406, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631639, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570509, "message": {"message_id": 407, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631651, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570510, "message": {"message_id": 408, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631654, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570511, "message": {"message_id": 409, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631670, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570512, "message": {"message_id": 410, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631683, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570513, "message": {"message_id": 411, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631747, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570514, "message": {"message_id": 413, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631773, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570515, "message": {"message_id": 415, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754631910, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570516, "message": {"message_id": 417, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754632100, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570517, "message": {"message_id": 419, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754632899, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570518, "message": {"message_id": 420, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754632914, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570519, "message": {"message_id": 421, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754632931, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570520, "message": {"message_id": 422, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754632931, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570521, "message": {"message_id": 424, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754633230, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570522, "message": {"message_id": 425, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754633340, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570523, "message": {"message_id": 427, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754634984, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570524, "message": {"message_id": 428, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754635026, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570525, "message": {"message_id": 429, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754635286, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570526, "message": {"message_id": 430, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754635299, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570527, "message": {"message_id": 431, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754635382, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570528, "message": {"message_id": 432, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754635462, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570529, "message": {"message_id": 433, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754635475, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570530, "message": {"message_id": 434, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754635491, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: TimeoutError('The read operation timed out')
+[bot] update: {"update_id": 995570531, "message": {"message_id": 464, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754637194, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570532, "message": {"message_id": 466, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754637610, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570533, "message": {"message_id": 473, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754638008, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570534, "message": {"message_id": 479, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754639811, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570535, "message": {"message_id": 481, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754639964, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570536, "message": {"message_id": 483, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754640020, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: TimeoutError('The read operation timed out')
+[bot] update: {"update_id": 995570537, "message": {"message_id": 485, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754640181, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570538, "message": {"message_id": 487, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754640474, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570539, "message": {"message_id": 489, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754640635, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570540, "message": {"message_id": 491, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754640889, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570541, "message": {"message_id": 493, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754641056, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570542, "message": {"message_id": 495, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754641071, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570543, "message": {"message_id": 497, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754641441, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: URLError(ConnectionResetError(54, 'Connection reset by peer'))
+[bot] error: URLError(ConnectionResetError(54, 'Connection reset by peer'))
+[bot] update: {"update_id": 995570544, "message": {"message_id": 499, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754642060, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570545, "message": {"message_id": 501, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754642793, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570546, "message": {"message_id": 503, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754645755, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: TimeoutError('The read operation timed out')
+[bot] error: TimeoutError('The read operation timed out')
+[bot] error: TimeoutError('The read operation timed out')
+[bot] error: TimeoutError('The read operation timed out')
+[bot] error: TimeoutError('The read operation timed out')
+[bot] update: {"update_id": 995570547, "message": {"message_id": 505, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754655191, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: URLError(TimeoutError('_ssl.c:1018: The handshake operation timed out'))
+[bot] update: {"update_id": 995570548, "message": {"message_id": 507, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754656305, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570549, "message": {"message_id": 509, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754656458, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570550, "message": {"message_id": 511, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754657448, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570551, "message": {"message_id": 513, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754657933, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] update: {"update_id": 995570552, "message": {"message_id": 515, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754658822, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] update: {"update_id": 995570553, "message": {"message_id": 518, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754659049, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] update: {"update_id": 995570554, "message": {"message_id": 521, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754659252, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570555, "message": {"message_id": 523, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754659257, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570556, "message": {"message_id": 525, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754659516, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570557, "message": {"message_id": 527, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754659524, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570558, "message": {"message_id": 529, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754659630, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570559, "message": {"message_id": 531, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754659788, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570560, "message": {"message_id": 533, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754659841, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] update: {"update_id": 995570561, "message": {"message_id": 535, "from": {"id": 350636518, "is_bot": false, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "language_code": "en"}, "chat": {"id": 350636518, "first_name": "Ruslan", "last_name": "Aglyamov", "username": "aglamove", "type": "private"}, "date": 1754660715, "text": "/start", "entities": [{"offset": 0, "length": 6, "type": "bot_command"}]}}
+[bot] send_start to chat 350636518
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: URLError(TimeoutError('_ssl.c:1018: The handshake operation timed out'))
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
+[bot] error: <HTTPError 409: 'Conflict'>
